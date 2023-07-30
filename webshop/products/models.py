@@ -43,7 +43,9 @@ class Sale(models.Model):
     end_date = models.DateTimeField(verbose_name='Дата окончания')
 
     class Meta:
-        indexes = ['id']
+        indexes = [
+            models.Index(fields=['id']),
+        ]
         ordering = ['-start_date']
         verbose_name='Скидка'
         verbose_name_plural='Скидки'
@@ -61,7 +63,9 @@ class Product(models.Model):
     created = models.DateTimeField(auto_now_add=True, verbose_name='Дата добавления')
 
     class Meta:
-        indexes = ['id']
+        indexes = [
+            models.Index(fields=['id']),
+        ]
         default_related_name = 'products'
         ordering = ['-created']
         verbose_name='Продукт'
