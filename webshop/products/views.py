@@ -1,6 +1,5 @@
 from django.views import View
-from django.http import JsonResponse, HttpRequest, HttpResponse
-from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse, HttpRequest
 from django.utils.decorators import method_decorator
 import json
 import datetime
@@ -27,11 +26,10 @@ class SalesAPIView(View):
             )
             sale.save()
             return JsonResponse(data=serializers.serialize_sale(sale), status=201)
-        except Exception as ex:
-            print(ex)
-            return JsonResponse(data={'error':'invalid data'}, status=400)
+        except Exception:
+            return JsonResponse(data={'error':'Неверные данные'}, status=400)
     
-@method_decorator(views_decorators.check_sale_does_not_exist, name='dispatch')
+@method_decorator(views_decorators.check_obj_does_not_exist, name='dispatch')
 class SaleAPIView(View):
     def get(self, request:HttpRequest, pk:int) -> JsonResponse:
         sale = models.Sale.objects.get(id=pk)
@@ -83,7 +81,7 @@ class ProductAPIView(View):
             new_img.save()
         return JsonResponse(data=serializers.serialize_product_obj(product), safe=False, status=200)
     
-class BrandAPIView(View):
+class BrandsAPIView(View):
     def get(self, request:HttpRequest) -> JsonResponse:
         brands_qs = models.Brand.objects.all()
         response_data = []
@@ -92,7 +90,40 @@ class BrandAPIView(View):
             response_data.append(current_brand_data)
         return JsonResponse(data=response_data, safe=False, status=200)
     
-class SellerAPIView(View):
+    def post(self, request:HttpRequest) -> JsonResponse:
+        data = json.loads(request.body)
+        try:
+            brand = models.Brand(
+                name = data['name'],
+                slug = data['slug'],
+                preview = data['preview'],
+                desc = data['description'],
+                official_name = data['official_name'],
+                licence = data['licence'],
+            )
+            brand.save()
+            return JsonResponse(data=serializers.serialize_brand(brand), status=201)
+        except Exception:
+            return JsonResponse(data={'error':'Неверные данные'}, status=400)
+
+@method_decorator(views_decorators.check_obj_does_not_exist, name='dispatch')
+class BrandAPIView(View):
+    def get(self, request:HttpRequest, pk:int) -> JsonResponse:
+        brand = models.Brand.objects.get(id=pk)
+        return JsonResponse(data=serializers.serialize_brand(brand), status=200)
+    
+    def put(self, request:HttpRequest, pk:int) -> JsonResponse:
+        data = json.loads(request.body)
+        brand = models.Brand.objects.get(id=pk)
+        models_utils.update_brand_data(brand, data)
+        return JsonResponse(data=serializers.serialize_brand(brand), status=200)
+
+    def delete(self, request:HttpRequest, pk:int) -> JsonResponse:
+        brand = models.Brand.objects.get(id=pk)
+        brand.delete()
+        return JsonResponse(data={'result':'Успешно удалено'}, status=200)
+
+class SellersAPIView(View):
     def get(self, request:HttpRequest) -> JsonResponse:
         sellers_qs = models.Seller.objects.all()
         response_data = []
@@ -100,3 +131,36 @@ class SellerAPIView(View):
             current_seller_data = serializers.serialize_brand(seller)
             response_data.append(current_seller_data)
         return JsonResponse(data=response_data, safe=False, status=200)
+    
+    def post(self, request:HttpRequest) -> JsonResponse:
+        data = json.loads(request.body)
+        try:
+            seller = models.Seller(
+                name = data['name'],
+                slug = data['slug'],
+                preview = data['preview'],
+                desc = data['description'],
+                official_name = data['official_name'],
+                licence = data['licence'],
+            )
+            seller.save()
+            return JsonResponse(data=serializers.serialize_seller(seller), status=201)
+        except Exception:
+            return JsonResponse(data={'error':'Неверные данные'}, status=400)
+
+@method_decorator(views_decorators.check_obj_does_not_exist, name='dispatch')
+class SellerAPIView(View):
+    def get(self, request:HttpRequest, pk:int) -> JsonResponse:
+        seller = models.Seller.objects.get(id=pk)
+        return JsonResponse(data=serializers.serialize_seller(seller), status=200)
+    
+    def put(self, request:HttpRequest, pk:int) -> JsonResponse:
+        data = json.loads(request.body)
+        seller = models.Seller.objects.get(id=pk)
+        models_utils.update_seller_data(seller, data)
+        return JsonResponse(data=serializers.serialize_seller(seller), status=200)
+
+    def delete(self, request:HttpRequest, pk:int) -> JsonResponse:
+        seller = models.Seller.objects.get(id=pk)
+        seller.delete()
+        return JsonResponse(data={'result':'Успешно удалено'}, status=200)

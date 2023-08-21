@@ -9,6 +9,11 @@ urlpatterns = [
     path('sale/<int:pk>/', views.SaleAPIView.as_view(), name='sale'),
 
     path('products/', views.ProductAPIView.as_view(), name='products'),
-    path('brands/', views.BrandAPIView.as_view(), name='brand'),
-    path('sellers/', views.SellerAPIView.as_view(), name='seller'),
+    path('product/<int:pk>/', views.ProductsAPIView.as_view(), name='product'),
+    
+    path('brands/', views.BrandsAPIView.as_view(), name='brands'),
+    path('brand/<int:pk>/', views.BrandAPIView.as_view(), name='brand'),
+
+    path('sellers/', views.SellersAPIView.as_view(), name='seller'),
+    path('seller/<int:pk>/', views.SellerAPIView.as_view(), name='seller'),
 ]
