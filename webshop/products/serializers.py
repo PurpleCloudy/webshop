@@ -35,6 +35,7 @@ def serialize_seller(seller:models.Seller):
 
 def serialize_sale(sale:models.Sale):
     current_sale_data = {
+        'id':sale.pk,
         'name':sale.name,
         'value':sale.value,
         'preview':sale.preview.url,

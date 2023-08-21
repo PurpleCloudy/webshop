@@ -54,6 +54,12 @@ class Sale(models.Model):
     start_date = models.DateTimeField(verbose_name='Дата добавления')
     end_date = models.DateTimeField(verbose_name='Дата окончания')
 
+    def save(self):
+        if self.start_date < self.end_date:
+            super().save()
+        else:
+            raise ValueError(f'start_date >= end_date')
+
     class Meta:
         indexes = [
             models.Index(fields=['id']),

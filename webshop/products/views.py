@@ -1,8 +1,10 @@
 from django.views import View
-from django.http import JsonResponse, HttpRequest
+from django.http import JsonResponse, HttpRequest, HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
+from django.utils.decorators import method_decorator
 import json
-from . import models
-from . import serializers
+import datetime
+from . import models, serializers, models_utils, views_decorators
 
 class SalesAPIView(View):
     def get(self, request:HttpRequest) -> JsonResponse:
@@ -13,6 +15,42 @@ class SalesAPIView(View):
             response_data.append(current_sale_data)
         return JsonResponse(data=response_data, safe=False, status=200)
     
+    def post(self, request:HttpRequest) -> JsonResponse:
+        data = json.loads(request.body)
+        try:
+            sale = models.Sale(
+                name = data['name'], 
+                value = data['value'],
+                preview = data['preview'],
+                start_date = datetime.datetime.strptime(data['start_date'], '%H:%M:%S %d-%m-%Y'),
+                end_date = datetime.datetime.strptime(data['end_date'], '%H:%M:%S %d-%m-%Y'),
+            )
+            sale.save()
+            return JsonResponse(data=serializers.serialize_sale(sale), status=201)
+        except Exception as ex:
+            print(ex)
+            return JsonResponse(data={'error':'invalid data'}, status=400)
+    
+@method_decorator(views_decorators.check_sale_does_not_exist, name='dispatch')
+class SaleAPIView(View):
+    def get(self, request:HttpRequest, pk:int) -> JsonResponse:
+        sale = models.Sale.objects.get(id=pk)
+        return JsonResponse(data=serializers.serialize_sale(sale), status=200)
+
+    def put(self, request:HttpRequest, pk:int) -> JsonResponse:
+        data = json.loads(request.body)
+        sale = models.Sale.objects.get(id=pk)
+        try:
+            models_utils.update_sale_data(sale, data)
+        except ValueError:
+            return JsonResponse(data={'error':'Дата начала больше или равна дате окончания'}, status=400)
+        return JsonResponse(data=serializers.serialize_sale(sale), status=200)
+    
+    def delete(self, request:HttpRequest, pk:int) -> JsonResponse:
+        sale = models.Sale.objects.get(id=pk)
+        sale.delete()
+        return JsonResponse(data={'result':'Успешно удалено'}, status=200)
+        
 class ProductAPIView(View):
     def get(self, request:HttpRequest) -> JsonResponse:
         products_qs = models.Product.objects.all()
@@ -23,7 +61,7 @@ class ProductAPIView(View):
         return JsonResponse(data=response_data, safe=False, status=200)
     
     def post(self, request:HttpRequest) -> JsonResponse:
-        data = json.loads(request)
+        data = json.loads(request.body)
         product = models.Product(
             category=data['category'],
             brand=data['brand'],
