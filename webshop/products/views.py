@@ -49,7 +49,7 @@ class SaleAPIView(View):
         sale.delete()
         return JsonResponse(data={'result':'Успешно удалено'}, status=200)
         
-class ProductAPIView(View):
+class ProductsAPIView(View):
     def get(self, request:HttpRequest) -> JsonResponse:
         products_qs = models.Product.objects.all()
         response_data = []
@@ -81,6 +81,23 @@ class ProductAPIView(View):
             new_img.save()
         return JsonResponse(data=serializers.serialize_product_obj(product), safe=False, status=200)
     
+@method_decorator(views_decorators.check_obj_does_not_exist, name='dispatch')
+class ProductAPIView(View):
+    def get(self, request:HttpRequest, pk:int) -> JsonResponse:
+        product = models.Product.objects.get(id=pk)
+        return JsonResponse(data=serializers.serialize_product_obj(product), status=200)
+
+    def put(self, request:HttpRequest, pk:int) -> JsonResponse:
+        data = json.loads(request.body)
+        product = models.Product.objects.get(id=pk)
+        models_utils.update_product_data(product, data)
+        return JsonResponse(data=serializers.serialize_product_obj(product), status=200)
+
+    def delete(self, request:HttpRequest, pk:int) -> JsonResponse:
+        product = models.Product.objects.get(id=pk)
+        product.delete()
+        return JsonResponse(data={'result':'Успешно удалено'}, status=200)
+
 class BrandsAPIView(View):
     def get(self, request:HttpRequest) -> JsonResponse:
         brands_qs = models.Brand.objects.all()

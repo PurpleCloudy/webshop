@@ -13,6 +13,7 @@ def serialize_category(category:models.Category):
 
 def serialize_brand(brand:models.Brand):
     current_brand_data = {
+        'id':brand.pk,
         'name':brand.name,
         'slug':brand.slug,
         'preview':brand.preview.url,
@@ -24,6 +25,7 @@ def serialize_brand(brand:models.Brand):
 
 def serialize_seller(seller:models.Seller):
     current_seller_data = {
+        'id':seller.pk,
         'name':seller.name,
         'slug':seller.slug,
         'preview':seller.preview.url,

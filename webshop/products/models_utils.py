@@ -1,6 +1,37 @@
 from django.utils.text import slugify
+from django.shortcuts import get_object_or_404
 import datetime
-from . import models
+import pytz
+from . import models, views_decorators
+
+def update_product_data(product:models.Product, data:dict) -> None:
+    if 'category' in data.keys():
+        product.category = get_object_or_404(models.Category, id=data['category']['id'])
+    if 'brand' in data.keys():
+        product.brand = get_object_or_404(models.Brand, id=data['brand']['id'])
+    if 'seller' in data.keys():
+        product.seller = get_object_or_404(models.Seller, id=data['seller']['id'])
+    if 'sale' in data.keys():
+        product.sale = get_object_or_404(models.Sale, id=data['sale']['id'])
+    if 'name' in data.keys():
+        product.name = data['name']
+        product.slug = slugify(product.name)
+    if 'description' in data.keys():
+        product.description = data['description']
+    if 'rating' in data.keys():
+        product.rating = data['rating']
+    if 'price' in data.keys():
+        product.price = data['price']
+    if 'tags' in data.keys():
+        product.tags.remove()
+        for tag in data['tags']:
+            product.tags.add(tag)
+    product.save()
+
+def image_adding(product:models.Product, url:str, description:str) -> int:
+    image_obj = models.Image.objects.create(product=product, image=url, description=description)
+    image_obj.save()
+    return image_obj.pk
 
 def update_sale_data(sale:models.Sale, data:dict) -> None:
     if 'name' in data.keys():
@@ -18,7 +49,7 @@ def update_sale_data(sale:models.Sale, data:dict) -> None:
 def update_brand_data(brand:models.Brand, data:dict) -> None:
     if 'name' in data.keys():
         brand.name = data['name']
-        brand.slug = slugify(data['name'])
+        brand.slug = slugify(brand.name)
     if 'preview' in data.keys():
         brand.preview = data['preview']
     if 'description' in data.keys():
@@ -32,7 +63,7 @@ def update_brand_data(brand:models.Brand, data:dict) -> None:
 def update_seller_data(seller:models.Seller, data:dict) -> None:
     if 'name' in data.keys():
         seller.name = data['name']
-        seller.slug = slugify(data['name'])
+        seller.slug = slugify(seller.name)
     if 'preview' in data.keys():
         seller.preview = data['preview']
     if 'description' in data.keys():
