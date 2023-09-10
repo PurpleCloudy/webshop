@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'taggit',
     'products.apps.ProductsConfig',
     'accounts.apps.AccountsConfig',
+    'cart.apps.CartConfig',
 ]
 
 MIDDLEWARE = [

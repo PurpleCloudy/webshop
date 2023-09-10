@@ -3,25 +3,53 @@ from django.contrib.auth.models import User
 
 
 class UserProfile(models.Model):
+    id = models.BigAutoField(primary_key=True, verbose_name='ID')
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=40)
-    surname = models.CharField(max_length=100)
-    age = models.PositiveSmallIntegerField()
-    phone_number = models.CharField(max_length=15)
-    email = models.EmailField()
-    avatar = models.ImageField()
-    balance = models.OneToOneField(to="Balance", on_delete=models.CASCADE)
-    cart = models.OneToOneField(to="cart.Cart", on_delete=models.CASCADE)
+    name = models.CharField(max_length=40, verbose_name='Имя')
+    surname = models.CharField(max_length=100, verbose_name='Фамилия')
+    age = models.PositiveSmallIntegerField(verbose_name='Возраст')
+    phone_number = models.CharField(max_length=15, verbose_name='Телефон')
+    email = models.EmailField(verbose_name='Почта')
+    avatar = models.ImageField(verbose_name='Фото')
+    balance = models.OneToOneField(to="Balance", on_delete=models.CASCADE, related_name='profile', verbose_name='Кошелёк')
+    password = models.CharField(max_length=30, verbose_name='Пароль')
+    # cart = models.OneToOneField(to="cart.Cart", on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['name', 'age']
+        verbose_name = 'Аккаунт'
+        verbose_name_plural = 'Аккаунты'
+
+    def __str__(self) -> str:
+        return self.name
 
 class Balance(models.Model):
-    value = models.DecimalField(decimal_places=2, max_digits=20)
+    id = models.BigAutoField(primary_key=True, verbose_name='ID')
+    value = models.DecimalField(decimal_places=2, max_digits=20, verbose_name='Баланс')
+
+    class Meta:
+        ordering = ['value']
+        verbose_name = 'Кошелёк'
+        verbose_name_plural = 'Кошельки'
+
+    def __str__(self) -> str:
+        return f'{self.value}'
 
 class Address(models.Model):
-    profile = models.ForeignKey(to="UserProfile", on_delete=models.CASCADE)
-    post_index = models.CharField(max_length=9)
-    country = models.CharField(max_length=40)
-    region = models.CharField(max_length=40)
-    city = models.CharField(max_length=40)
-    street = models.CharField(max_length=40)
-    house = models.CharField(max_length=10)
-    apartment = models.CharField(max_length=10)
+    id = models.BigAutoField(primary_key=True, verbose_name='ID')
+    profile = models.ForeignKey(to="UserProfile", on_delete=models.CASCADE, verbose_name='Аккаунт')
+    post_index = models.CharField(max_length=9, verbose_name='Почтовый индекс')
+    country = models.CharField(max_length=40, verbose_name='Страна')
+    region = models.CharField(max_length=40, verbose_name='Регион')
+    city = models.CharField(max_length=40, verbose_name='Город')
+    street = models.CharField(max_length=40, verbose_name='Улица')
+    house = models.CharField(max_length=10, verbose_name='Дом')
+    apartment = models.CharField(max_length=10, verbose_name='Квартира', null=True)
+
+    class Meta:
+        ordering = ['country', 'city']
+        verbose_name = 'Адрес'
+        verbose_name_plural = 'Адреса'
+
+    def __str__(self) -> str:
+        return f'{self.profile} - {self.street},{self.house}'
