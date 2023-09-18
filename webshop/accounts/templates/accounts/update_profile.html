@@ -1,11 +1,11 @@
 {% extends "accounts/base.html" %}
 
-{% block title %} Registration {% endblock %}
+{% block title %} Updating profile {% endblock %}
 
 {% block content %}
 <form method="post">
     {% csrf_token %}
     {{form.as_p}}
-    <button type="submit">Зарегистрироваться</button>
+    <button type="submit">Обновить</button>
 </form>
 {% endblock %}

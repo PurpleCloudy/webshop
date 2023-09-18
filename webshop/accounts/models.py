@@ -3,14 +3,13 @@ from django.contrib.auth.models import User
 
 
 class UserProfile(models.Model):
-    id = models.BigAutoField(primary_key=True, verbose_name='ID')
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
+    user = models.OneToOneField(to=User, related_name='profile', on_delete=models.CASCADE)
     name = models.CharField(max_length=40, verbose_name='Имя')
     surname = models.CharField(max_length=100, verbose_name='Фамилия')
     age = models.PositiveSmallIntegerField(verbose_name='Возраст')
-    phone_number = models.CharField(max_length=15, verbose_name='Телефон')
+    phone_number = models.CharField(max_length=15, verbose_name='Телефон', blank=True)
     email = models.EmailField(verbose_name='Почта')
-    avatar = models.ImageField(verbose_name='Фото')
+    avatar = models.ImageField(verbose_name='Фото', blank=True)
     balance = models.OneToOneField(to="Balance", on_delete=models.CASCADE, related_name='profile', verbose_name='Кошелёк')
     password = models.CharField(max_length=30, verbose_name='Пароль')
     # cart = models.OneToOneField(to="cart.Cart", on_delete=models.CASCADE)
