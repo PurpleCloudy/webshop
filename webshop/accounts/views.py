@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.views import LoginView, LogoutView, Pa
-from . import models, forms
+from django.contrib.auth import login, logout
+from django.contrib.auth.views import LoginView, LogoutView
+from . import models, forms, utils
 
 
 class ProfileLoginView(LoginView):
@@ -71,8 +71,7 @@ class RegistrationView(View):
             profile.save()
             login(request, user)
             return redirect(reverse('accounts:homepage'))
-        else:
-            return JsonResponse(data={'error':'Неверные данные'}, status=400)
+        return JsonResponse(data={'error':'Неверные данные'}, status=400)
         
 class UpdateProfileView(View):
     @staticmethod
@@ -88,7 +87,41 @@ class UpdateProfileView(View):
             if form.is_valid():
                 models.UserProfile.objects.filter(pk=user.id).update(**form.cleaned_data)
                 return redirect(reverse('accounts:homepage'))
-        else:
-            return redirect(reverse('accounts:login'))
+            return JsonResponse(data={'error':'Не валидные данные'}, status=400)
+        return redirect(reverse('accounts:login'))
         
-
+class ProfilePasswordResetView(View):
+    @staticmethod
+    def get(request:HttpRequest) -> HttpResponse:
+        user = request.user
+        if user.is_authenticated:
+            utils.link_token_to_profile(user.profile)
+            utils.send_reset_password_link(request, user.profile)
+            return HttpResponse('На почту отправленна ссылка. Перейдите по ней, чтобы сменить пароль')
+        form = forms.PasswordResetForm()
+        return render(request, 'accounts/password_reset.html', {'form':form})
+        
+    @staticmethod
+    def post(request:HttpRequest) -> HttpResponse:
+        form = forms.PasswordResetForm(request.POST)
+        if form.is_valid():
+            user_profile = get_object_or_404(models.UserProfile, email=form.cleaned_data['email'])
+            utils.link_token_to_profile(user_profile)
+            utils.send_reset_password_link(request, user_profile)
+            return HttpResponse('На почту отправленна ссылка. Перейдите по ней, чтобы сменить пароль')
+        return JsonResponse(data={'error':'Невалидные данные'})
+    
+class ProfilePasswordResetDoneView(View):
+    @staticmethod
+    def get(request:HttpRequest, reset_token:str) -> HttpResponse:
+        form = forms.PasswordResetDoneForm()
+        return render(request, 'accounts/password_reset_done.html', {'form':form})
+    
+    @staticmethod
+    def post(request:HttpRequest, reset_token:str) -> HttpResponse:
+        profile = models.UserProfile.objects.get(reset_token=reset_token)
+        form = forms.PasswordResetDoneForm(request.POST)
+        if form.is_valid() and form.cleaned_data['password'] == form.cleaned_data['password_confirm']:
+            utils.update_password_and_login(request, profile, form.cleaned_data['password'])
+            return redirect(reverse('accounts:homepage'))
+        return JsonResponse(data={'error':'Невалидные данные'}, status=400)

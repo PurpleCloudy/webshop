@@ -18,3 +18,10 @@ class ChangeDetailForm(forms.ModelForm):
     class Meta:
         model = models.UserProfile
         fields = ['name', 'surname', 'age', 'phone_number']
+
+class PasswordResetForm(forms.Form):
+    email = forms.EmailField()
+        
+class PasswordResetDoneForm(forms.Form):
+    password = forms.CharField(max_length=30, widget=forms.widgets.PasswordInput)
+    password_confirm = forms.CharField(max_length=30, widget=forms.widgets.PasswordInput)
