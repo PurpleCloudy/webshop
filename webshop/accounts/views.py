@@ -15,45 +15,8 @@ class ProfileLoginView(LoginView):
 class ProfileLogoutView(LogoutView):
     next_page = reverse_lazy('accounts:login')
 
-# def login_view(request:HttpRequest):
-#     if request.method == 'POST':
-#         form = forms.AuthenticationForm(request.POST)
-#         if form.is_valid():
-#             print(form.cleaned_data['email'], form.cleaned_data['password'])
-#             user = User.objects.get(email=form.cleaned_data['email'])
-#             if user:
-#                 user = authenticate(request, username=user.username, password=user.password)
-#                 if user:
-#                     login(request, user)
-#                     return render(request, 'accounts/homepage.html')
-#             else:
-#                 return JsonResponse(data={'error':'Неверный логин или пароль'}, status=400)
-#     else:
-#         form = forms.AuthenticationForm()
-#         return render(request, 'accounts/login.html', {'form':form})
-    
-def logout_view(request:HttpRequest):
-    logout(request)
-    return render(request, 'accounts/homepage.html')
-
 def homepage(request:HttpRequest):
     return render(request, 'accounts/homepage.html')
-
-# def registration_view(request:HttpRequest):
-#     if request.method == 'POST':
-#         form = forms.RegistrationForm(request.POST)
-#         if form.is_valid():
-#             user = models.User.objects.create(username=form.cleaned_data['email'], password=form.cleaned_data['password'])
-#             balance = models.Balance.objects.create(value='0.00')
-#             profile = models.UserProfile.objects.create(user=user, **form.cleaned_data, balance=balance)
-#             profile.save()
-#             login(request, user)
-#             return redirect(reverse('accounts:homepage'))
-#         else:
-#             return JsonResponse(data={'error':'Неверные данные'}, status=400)
-#     else:
-#         form = forms.RegistrationForm()
-#         return render(request, 'accounts/registration.html', {'form':form})
     
 class RegistrationView(View):
     @staticmethod
@@ -61,17 +24,33 @@ class RegistrationView(View):
         form = forms.RegistrationForm()
         return render(request, 'accounts/registration.html', {'form':form})
     
+    # @staticmethod
+    # def post(request:HttpRequest) -> HttpResponse:
+    #     form = forms.RegistrationForm(request.POST)
+    #     if form.is_valid():
+    #         user = models.User.objects.create(username=form.cleaned_data['email'], password=form.cleaned_data['password'])
+    #         balance = models.Balance.objects.create(value='0.00')
+    #         profile = models.UserProfile.objects.create(user=user, **form.cleaned_data, balance=balance)
+    #         profile.save()
+    #         login(request, user)
+    #         return redirect(reverse('accounts:homepage'))
+    #     return JsonResponse(data={'error':'Неверные данные'}, status=400)
+    
     @staticmethod
     def post(request:HttpRequest) -> HttpResponse:
-        form = forms.RegistrationForm(request.POST)
-        if form.is_valid():
-            user = models.User.objects.create(username=form.cleaned_data['email'], password=form.cleaned_data['password'])
-            balance = models.Balance.objects.create(value='0.00')
-            profile = models.UserProfile.objects.create(user=user, **form.cleaned_data, balance=balance)
-            profile.save()
-            login(request, user)
-            return redirect(reverse('accounts:homepage'))
-        return JsonResponse(data={'error':'Неверные данные'}, status=400)
+        user = models.User.objects.create(username=request.POST['email'], password=request.POST['password'])
+        balance = models.Balance.objects.create(value='0.00')
+        profile = models.UserProfile.objects.create(user=user,
+                                                    name=request.POST['name'],
+                                                    surname=request.POST['surname'],
+                                                    age=request.POST['age'],
+                                                    phone_number=request.POST['phone_number'],
+                                                    email=request.POST['email'],
+                                                    password=request.POST['password'],
+                                                    balance=balance)
+        profile.save()
+        login(request, user)
+        return redirect(reverse('accounts:homepage'))
         
 class UpdateProfileView(View):
     @staticmethod

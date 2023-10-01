@@ -9,7 +9,7 @@
 
 {% block content %}
     <div id="login_block">
-        <form id="login_form" method="post">
+        <form id="login_form" method="post" action="{% url 'accounts:login' %}">
             {% csrf_token %}
             <div class="input_field">
                 <label class="label_input_field" for="email">Email пользователя</label>
