@@ -1,11 +1,25 @@
 {% extends "accounts/base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}">
+{% endblock %}
 
 {% block title %} Login {% endblock %}
 
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Авторизироваться</button>
-    </form>
+    <div id="login_block">
+        <form id="login_form" method="post">
+            {% csrf_token %}
+            <div class="input_field">
+                <label class="label_input_field" for="email">Email пользователя</label>
+                <input id="email" type="email" placeholder="Введите email пользователя" required>
+            </div>
+            <div class="input_field">
+                <label class="label_input_field" for="password">Пароль</label>
+                <input id="password" type="password" placeholder="Введите пароль" required>
+            </div>
+            <button id="login_confirm" type="submit">Авторизироваться</button>
+        </form>
+    </div>
 {% endblock %}

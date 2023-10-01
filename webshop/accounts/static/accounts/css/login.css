@@ -1,0 +1,55 @@
+body {
+    background-color: #dadada;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+#login_form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#main_content {
+    display: flex;
+    justify-content: center;
+    padding-top: 5rem;
+}
+
+#login_block {
+    padding: 1rem;
+    background-color: #e8e8e8;
+    width: 25%;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    border-radius: 20px;
+}
+
+.input_field {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#login_confirm {
+    margin-top: 0.3rem;
+    width: 50%;
+    padding: 0.7rem 1rem;
+    border-radius: 15px;
+    border: 0;
+    background-color: #3d963c;
+    color: aliceblue;
+}
+
+.label_input_field {
+    margin-bottom: 0.5rem;
+}
+
+#email, #password {
+    text-align: center;
+    padding: 0.7rem;
+    border-radius: 15px;
+    border: 0;
+    width: 110%;
+}
