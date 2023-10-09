@@ -1,0 +1,31 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'accounts/css/navbar.css' %}">
+
+
+<nav id="navigation_bar">
+        <span id="homepage_link">
+            <a class="menu_links" href="{% url 'accounts:homepage' %}">Webshop</a>
+        </span>
+        <span id="right_menu">
+            {% if user.is_authenticated %}
+                <span id="logout">
+                    <a class="menu_links" href="{% url 'accounts:logout' %}">
+                        Logout
+                    </a>
+                </span>
+            {% else %}
+                    <span id="login">
+                        <a class="menu_links" href="{% url 'accounts:login' %}">
+                            Login
+                        </a>
+                    </span>
+                    <span id="register">
+                        <a class="menu_links" href="{% url 'accounts:registration' %}">
+                            Register
+                        </a>
+                    </span>
+            {% endif %}
+        </span>
+    </div>
+</nav>

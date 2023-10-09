@@ -8,6 +8,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 0.5rem;
 }
 
 #main_content {
@@ -20,9 +21,8 @@ body {
     padding: 1rem;
     background-color: #e8e8e8;
     width: 25%;
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-    border-radius: 20px;
+    padding-top: 2.3rem;
+    border-radius: 15px;
 }
 
 .input_field {
@@ -52,4 +52,15 @@ body {
     border-radius: 15px;
     border: 0;
     width: 110%;
+}
+
+#forget_password {
+    display: flex;
+    justify-content: center;
+}
+
+#password_reset_link {
+    text-decoration: 0;
+    color: #3b8a2a;
+    font-size: smaller;
 }

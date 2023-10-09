@@ -13,4 +13,5 @@ urlpatterns = [
     path('homepage/', views.homepage, name='homepage'),
     path('password_reset/', views.ProfilePasswordResetView.as_view(), name='password_reset'),
     path('password_reset/<str:reset_token>/', views.ProfilePasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('personal_data/', views.ProfileDataView.as_view(), name='personal_data')
 ]

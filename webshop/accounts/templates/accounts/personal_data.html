@@ -1,0 +1,33 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'accounts/css/personal_data.css' %}">
+{% endblock %}
+
+{% block title %} Personal info {% endblock %}
+
+
+{% block content %}
+    <div id="avatar_block">
+        <img id="avatar" src="{{ user.profile.avatar.url }}" alt="Аватар">
+    </div>
+    <div id="main_data">
+        <div id="personal_info">
+            <div class="human_characteristics">
+                <p class="description">Имя:</p>
+                <p>{{ user.profile.name }}</p>
+            </div>
+            <div class="human_characteristics">
+                <p class="description">Фамилия:</p>
+                <p>{{ user.profile.surname }}</p>
+            </div>
+            <div class="human_characteristics">
+                <p class="description">Возраст:</p>
+                <p>{{ user.profile.age }}</p>
+            </div>
+        </div>
+        <div id="contact_info"></div>
+        <div id="payment_info"></div>
+    </div>
+{% endblock %}

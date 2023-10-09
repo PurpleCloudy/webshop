@@ -10,7 +10,7 @@ class UserProfile(models.Model):
     age = models.PositiveSmallIntegerField(verbose_name='Возраст')
     phone_number = models.CharField(max_length=15, verbose_name='Телефон', blank=True)
     email = models.EmailField(verbose_name='Почта')
-    avatar = models.ImageField(verbose_name='Фото', blank=True)
+    avatar = models.ImageField(upload_to='avatars', verbose_name='Фото', blank=True)
     balance = models.OneToOneField(to="Balance", on_delete=models.CASCADE, related_name='profile', verbose_name='Кошелёк')
     password = models.CharField(max_length=30, verbose_name='Пароль')
     reset_token = models.CharField(max_length=32, null=True, blank=True)

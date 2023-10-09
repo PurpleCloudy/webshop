@@ -8,9 +8,19 @@ from . import models, forms, utils
 
 
 class ProfileLoginView(LoginView):
-    template_name = 'accounts/login.html'
-    next_page = reverse_lazy('accounts:homepage')
-    redirect_authenticated_user = reverse_lazy('accounts:homepage')
+    @staticmethod
+    def get(request:HttpRequest) -> HttpResponse:
+        return render(request, 'accounts/login.html')
+    
+    @staticmethod
+    def post(request:HttpRequest) -> HttpResponse:
+        try:
+            profile = models.UserProfile.objects.get(email=request.POST['email'])
+            user = profile.user
+            login(request, user)
+            return redirect(reverse('accounts:homepage'))
+        except:
+            return JsonResponse(data={'Error':'Invalid data'}, status=400)
 
 class ProfileLogoutView(LogoutView):
     next_page = reverse_lazy('accounts:login')
@@ -21,36 +31,26 @@ def homepage(request:HttpRequest):
 class RegistrationView(View):
     @staticmethod
     def get(request:HttpRequest) -> HttpResponse:
-        form = forms.RegistrationForm()
-        return render(request, 'accounts/registration.html', {'form':form})
-    
-    # @staticmethod
-    # def post(request:HttpRequest) -> HttpResponse:
-    #     form = forms.RegistrationForm(request.POST)
-    #     if form.is_valid():
-    #         user = models.User.objects.create(username=form.cleaned_data['email'], password=form.cleaned_data['password'])
-    #         balance = models.Balance.objects.create(value='0.00')
-    #         profile = models.UserProfile.objects.create(user=user, **form.cleaned_data, balance=balance)
-    #         profile.save()
-    #         login(request, user)
-    #         return redirect(reverse('accounts:homepage'))
-    #     return JsonResponse(data={'error':'Неверные данные'}, status=400)
+        return render(request, 'accounts/registration.html')
     
     @staticmethod
     def post(request:HttpRequest) -> HttpResponse:
-        user = models.User.objects.create(username=request.POST['email'], password=request.POST['password'])
-        balance = models.Balance.objects.create(value='0.00')
-        profile = models.UserProfile.objects.create(user=user,
-                                                    name=request.POST['name'],
-                                                    surname=request.POST['surname'],
-                                                    age=request.POST['age'],
-                                                    phone_number=request.POST['phone_number'],
-                                                    email=request.POST['email'],
-                                                    password=request.POST['password'],
-                                                    balance=balance)
-        profile.save()
-        login(request, user)
-        return redirect(reverse('accounts:homepage'))
+        try:
+            user = models.User.objects.create(username=request.POST['email'], password=request.POST['password'])
+            balance = models.Balance.objects.create(value='0.00')
+            profile = models.UserProfile.objects.create(user=user,
+                                                        name=request.POST['name'],
+                                                        surname=request.POST['surname'],
+                                                        age=request.POST['age'],
+                                                        phone_number=request.POST['phone_number'],
+                                                        email=request.POST['email'],
+                                                        password=request.POST['password'],
+                                                        balance=balance)
+            profile.save()
+            login(request, user)
+            return redirect(reverse('accounts:homepage'))
+        except:
+            return JsonResponse(data={'Error':'Invalid data'}, status=400)
         
 class UpdateProfileView(View):
     @staticmethod
@@ -77,18 +77,14 @@ class ProfilePasswordResetView(View):
             utils.link_token_to_profile(user.profile)
             utils.send_reset_password_link(request, user.profile)
             return HttpResponse('На почту отправленна ссылка. Перейдите по ней, чтобы сменить пароль')
-        form = forms.PasswordResetForm()
-        return render(request, 'accounts/password_reset.html', {'form':form})
+        return render(request, 'accounts/password_reset.html')
         
     @staticmethod
     def post(request:HttpRequest) -> HttpResponse:
-        form = forms.PasswordResetForm(request.POST)
-        if form.is_valid():
-            user_profile = get_object_or_404(models.UserProfile, email=form.cleaned_data['email'])
-            utils.link_token_to_profile(user_profile)
-            utils.send_reset_password_link(request, user_profile)
-            return HttpResponse('На почту отправленна ссылка. Перейдите по ней, чтобы сменить пароль')
-        return JsonResponse(data={'error':'Невалидные данные'})
+        user_profile = get_object_or_404(models.UserProfile, email=request.POST['email'])
+        utils.link_token_to_profile(user_profile)
+        utils.send_reset_password_link(request, user_profile)
+        return HttpResponse('На почту отправленна ссылка. Перейдите по ней, чтобы сменить пароль')
     
 class ProfilePasswordResetDoneView(View):
     @staticmethod
@@ -104,3 +100,8 @@ class ProfilePasswordResetDoneView(View):
             utils.update_password_and_login(request, profile, form.cleaned_data['password'])
             return redirect(reverse('accounts:homepage'))
         return JsonResponse(data={'error':'Невалидные данные'}, status=400)
+
+class ProfileDataView(View):
+    @staticmethod
+    def get(request:HttpRequest) -> HttpResponse:
+        return render(request, 'accounts/personal_data.html')

@@ -13,13 +13,16 @@
             {% csrf_token %}
             <div class="input_field">
                 <label class="label_input_field" for="email">Email пользователя</label>
-                <input id="email" type="email" placeholder="Введите email пользователя" required>
+                <input id="email" type="email" placeholder="Введите email пользователя" name="email" required>
             </div>
             <div class="input_field">
                 <label class="label_input_field" for="password">Пароль</label>
-                <input id="password" type="password" placeholder="Введите пароль" required>
+                <input id="password" type="password" placeholder="Введите пароль" name="password" required>
             </div>
             <button id="login_confirm" type="submit">Авторизироваться</button>
         </form>
+        <span id="forget_password">
+            <a id="password_reset_link" href="{% url 'accounts:password_reset' %}">Забыли пароль?</a>
+        </span>
     </div>
 {% endblock %}

@@ -9,6 +9,7 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
+    {% include 'accounts/navbar.html' %}
     <div id="main_content">
         {% block content %}
         {% endblock %}

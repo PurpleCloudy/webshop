@@ -1,0 +1,18 @@
+#navigation_bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1.5rem 2rem;
+    background-color: #ababab;
+    border-radius: 0 0 10px 10px;
+}
+
+#register {
+    margin-left: 3rem;
+}
+
+.menu_links {
+    text-decoration: 0;
+    font-weight: bold;
+    color: #026809;
+}

@@ -10,9 +10,6 @@
         <li>{{ user.profile.phone_number }}</li>
         <li>{{ user.profile.age }}</li>
     </ul>
-    <a href="{% url 'accounts:logout' %}">Logout</a>
-{% else %}
-    <a href="{% url 'accounts:login' %}">Login</a>
 {% endif %}
 
 {% endblock %}
