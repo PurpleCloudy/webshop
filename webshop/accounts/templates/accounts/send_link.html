@@ -1,0 +1,16 @@
+{% extends "accounts/base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'accounts/css/send_link.css' %}"> 
+{% endblock %}
+
+{% block title %} Link {% endblock %}
+
+{% block content %}
+
+<div id="message_container">
+    <p>На почту отправленна ссылка. Перейдите по ней, чтобы сменить пароль.</p>
+</div>
+
+{% endblock %}

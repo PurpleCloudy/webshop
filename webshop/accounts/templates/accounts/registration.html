@@ -11,30 +11,34 @@
     <div id="registration_block">
         <form id="registration_form" method="post" action="{% url 'accounts:registration' %}">
             {% csrf_token %}
-            <div class="input_field">
+            <!-- <div class="input_field">
                 <label class="label_input_field" for="name">Имя</label>
                 <input id="name" class="input_field" type="text" placeholder="Введите имя" name="name" required>
             </div>
             <div class="input_field">
-                <label class="label_input_field" for="name">Фамилия</label>
+                <label class="label_input_field" for="surname">Фамилия</label>
                 <input id="surname" class="input_field" type="text" placeholder="Введите фамилию" name="surname" required>
-            </div>
+            </div> -->
             <div class="input_field">
-                <label class="label_input_field" for="name">Возраст</label>
-                <input id="age" class="input_field" type="number" min="10" max="100" name="age" required>
-            </div>
-            <div class="input_field">
-                <label class="label_input_field" for="name">Телефон</label>
-                <input id="phone" class="input_field" type="text" placeholder="Введите номер телефона" name="phone_number">
-            </div>
-            <div class="input_field">
-                <label class="label_input_field" for="name">Email</label>
+                <label class="label_input_field" for="email">Email</label>
                 <input id="email" class="input_field" type="email" placeholder="Введите почту" name="email" required>
             </div>
+            <!-- <div class="input_field">
+                <label class="label_input_field" for="phone">Телефон</label>
+                <input id="phone" class="input_field" type="text" placeholder="Введите номер телефона" name="phone_number">
+            </div> -->
             <div class="input_field">
-                <label class="label_input_field" for="name">Пароль</label>
+                <label class="label_input_field" for="password">Пароль</label>
                 <input id="password" class="input_field" type="password" placeholder="Введите пароль" name="password" required>
             </div>
+            <div class="input_field">
+                <label class="label_input_field" for="password_confirm">Подтверждение пароля</label>
+                <input id="password_confirm" class="input_field" type="password" placeholder="Подтвердите пароль" name="password_confirm" required>
+            </div>
+            <!-- <div class="input_field">
+                <label class="label_input_field" for="age">Возраст</label>
+                <input id="age" class="input_field" type="number" min="10" max="100" name="age" required>
+            </div> -->
             <button id="submit_registration" type="submit">Зарегистрироваться</button>
         </form>
     </div>

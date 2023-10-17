@@ -31,4 +31,9 @@ def update_password_and_login(request:HttpRequest, profile:models.UserProfile, n
     user.save()
     login(request, user)
 
-
+def update_profile(profile:models.UserProfile, data:dict) -> None:
+    profile.name = data['name']
+    profile.surname = data['surname']
+    profile.age = data['age']
+    profile.phone_number = data['phone_number']
+    profile.save()

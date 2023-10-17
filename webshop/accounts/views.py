@@ -4,7 +4,7 @@ from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView, LogoutView
-from . import models, forms, utils
+from . import models, forms, utils, validators
 
 
 class ProfileLoginView(LoginView):
@@ -15,7 +15,7 @@ class ProfileLoginView(LoginView):
     @staticmethod
     def post(request:HttpRequest) -> HttpResponse:
         try:
-            profile = models.UserProfile.objects.get(email=request.POST['email'])
+            profile = models.UserProfile.objects.get(email=request.POST['email'], password=request.POST['password'])
             user = profile.user
             login(request, user)
             return redirect(reverse('accounts:homepage'))
@@ -36,37 +36,40 @@ class RegistrationView(View):
     @staticmethod
     def post(request:HttpRequest) -> HttpResponse:
         try:
-            user = models.User.objects.create(username=request.POST['email'], password=request.POST['password'])
-            balance = models.Balance.objects.create(value='0.00')
-            profile = models.UserProfile.objects.create(user=user,
-                                                        name=request.POST['name'],
-                                                        surname=request.POST['surname'],
-                                                        age=request.POST['age'],
-                                                        phone_number=request.POST['phone_number'],
-                                                        email=request.POST['email'],
-                                                        password=request.POST['password'],
-                                                        balance=balance)
-            profile.save()
-            login(request, user)
-            return redirect(reverse('accounts:homepage'))
+            if request.POST['password_confirm'] == request.POST['password']:
+                user = models.User.objects.create(username=request.POST['email'], password=request.POST['password'])
+                # balance = models.Balance.objects.create(value='0.00')
+                # profile = models.UserProfile.objects.create(user=user,
+                #                                             name=request.POST['name'],
+                #                                             surname=request.POST['surname'],
+                #                                             age=request.POST['age'],
+                #                                             phone_number=request.POST['phone_number'],
+                #                                             email=request.POST['email'],
+                #                                             password=request.POST['password'],
+                #                                             balance=balance)
+                # profile.save()
+                login(request, user)
+                return redirect(reverse('accounts:homepage'))
+            else:
+                raise Exception
         except:
             return JsonResponse(data={'Error':'Invalid data'}, status=400)
         
 class UpdateProfileView(View):
     @staticmethod
     def get(request:HttpRequest) -> HttpResponse:
-        form = forms.ChangeDetailForm()
-        return render(request, 'accounts/update_profile.html', {'form':form})
+        return render(request, 'accounts/update_profile.html')
 
     @staticmethod
     def post(request:HttpRequest) -> HttpResponse:
         user = request.user
         if user.is_authenticated:
-            form = forms.ChangeDetailForm(request.POST)
-            if form.is_valid():
-                models.UserProfile.objects.filter(pk=user.id).update(**form.cleaned_data)
-                return redirect(reverse('accounts:homepage'))
-            return JsonResponse(data={'error':'Не валидные данные'}, status=400)
+            profile_data_is_valid = validators.validate_profile_data(request.POST)
+            if not profile_data_is_valid[0]:
+                return JsonResponse(data={'error':f'{profile_data_is_valid[1]}'}, status=400)
+            profile = user.profile
+            utils.update_profile(profile, request.POST)
+            return redirect(reverse('accounts:homepage'))
         return redirect(reverse('accounts:login'))
         
 class ProfilePasswordResetView(View):
@@ -76,7 +79,7 @@ class ProfilePasswordResetView(View):
         if user.is_authenticated:
             utils.link_token_to_profile(user.profile)
             utils.send_reset_password_link(request, user.profile)
-            return HttpResponse('На почту отправленна ссылка. Перейдите по ней, чтобы сменить пароль')
+            return render(request, 'accounts/send_link.html')
         return render(request, 'accounts/password_reset.html')
         
     @staticmethod
@@ -84,13 +87,12 @@ class ProfilePasswordResetView(View):
         user_profile = get_object_or_404(models.UserProfile, email=request.POST['email'])
         utils.link_token_to_profile(user_profile)
         utils.send_reset_password_link(request, user_profile)
-        return HttpResponse('На почту отправленна ссылка. Перейдите по ней, чтобы сменить пароль')
+        return render(request, 'accounts/send_link.html')
     
 class ProfilePasswordResetDoneView(View):
     @staticmethod
     def get(request:HttpRequest, reset_token:str) -> HttpResponse:
-        form = forms.PasswordResetDoneForm()
-        return render(request, 'accounts/password_reset_done.html', {'form':form})
+        return render(request, 'accounts/password_reset_done.html', {'reset_token':reset_token})
     
     @staticmethod
     def post(request:HttpRequest, reset_token:str) -> HttpResponse:

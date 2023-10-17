@@ -1,11 +1,33 @@
 {% extends "accounts/base.html" %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'accounts/css/update_profile.css' %}">
+{% endblock %}
 
 {% block title %} Updating profile {% endblock %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{form.as_p}}
-    <button type="submit">Обновить</button>
-</form>
+    <div id="updating_block">
+        <form id="updating_form" method="post" action="{% url 'accounts:update_profile' %}">
+            {% csrf_token %}
+            <div class="input_field">
+                <label class="label_input_field" for="name">Имя</label>
+                <input id="name" class="input_field" type="text" placeholder="Введите имя" name="name">
+            </div>
+            <div class="input_field">
+                <label class="label_input_field" for="surname">Фамилия</label>
+                <input id="surname" class="input_field" type="text" placeholder="Введите фамилию" name="surname">
+            </div>
+            <div class="input_field">
+                <label class="label_input_field" for="phone">Телефон</label>
+                <input id="phone" class="input_field" type="text" placeholder="Введите номер телефона" name="phone_number">
+            </div>
+            <div class="input_field">
+                <label class="label_input_field" for="age">Возраст</label>
+                <input id="age" class="input_field" type="number" min="10" max="100" name="age">
+            </div>
+            <button id="submit_registration" type="submit">Подтвердить</button>
+        </form>
+    </div>
 {% endblock %}

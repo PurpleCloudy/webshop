@@ -1,5 +1,4 @@
 from django import forms
-from . import models
 
 
 # class AuthenticationForm(forms.Form):
@@ -14,10 +13,10 @@ from . import models
 #             'password': forms.widgets.PasswordInput()
 #         }
 
-class ChangeDetailForm(forms.ModelForm):
-    class Meta:
-        model = models.UserProfile
-        fields = ['name', 'surname', 'age', 'phone_number']
+# class ChangeDetailForm(forms.ModelForm):
+#     class Meta:
+#         model = models.UserProfile
+#         fields = ['name', 'surname', 'age', 'phone_number']
 
 # class PasswordResetForm(forms.Form):
 #     email = forms.EmailField()

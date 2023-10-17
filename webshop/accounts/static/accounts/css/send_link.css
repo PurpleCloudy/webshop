@@ -1,44 +1,46 @@
 #main_content {
     display: flex;
     justify-content: center;
-    padding-top: 5rem;
+    padding-top: 2.3rem;
 }
 
-#email_block {
-    display: flex;
+#reset_block {
+    padding: 0.5rem;
+    padding-top: 0.5rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
     background-color: #e8e8e8;
-    padding: 2rem 3rem;
     border-radius: 15px;
 }
 
-#password_reset_form {
+#reset_form {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .input_field {
     display: flex;
-    align-items: center;
     flex-direction: column;
-    margin-bottom: 2rem;
+    align-items: center;
 }
 
 .label_input_field {
     margin-bottom: 0.5rem;
 }
 
-#email {
-    text-align: center;
-    padding: 0.7rem;
-    border-radius: 15px;
+.input_field{
+    padding: 0.7rem 1.8rem;
     border: 0;
+    border-radius: 15px;
+    text-align: center;
 }
 
-#send_confirm {
-    margin-top: 0.5rem;
-    padding: 0.5rem;
+#password_change_confirm {
+    padding: 0.7rem 1.3rem;
     border-radius: 15px;
     border: 0;
     background-color: #3d963c;
     color: aliceblue;
+    margin: 1rem 0rem;
 }

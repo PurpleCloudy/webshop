@@ -1,9 +1,3 @@
-body {
-    background-color: #dadada;
-    max-width: 1440px;
-    margin: 0 auto;
-}
-
 #main_content {
     display: flex;
     justify-content: center;
