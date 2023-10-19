@@ -10,6 +10,9 @@ from . import models, forms, utils, validators
 class ProfileLoginView(LoginView):
     @staticmethod
     def get(request:HttpRequest) -> HttpResponse:
+        user = request.user
+        if user.is_authenticated:
+            return redirect(reverse('accounts:homepage'))
         return render(request, 'accounts/login.html')
     
     @staticmethod
@@ -31,6 +34,9 @@ def homepage(request:HttpRequest):
 class RegistrationView(View):
     @staticmethod
     def get(request:HttpRequest) -> HttpResponse:
+        user = request.user
+        if user.is_authenticated:
+            return redirect(reverse('accounts:homepage'))
         return render(request, 'accounts/registration.html')
     
     @staticmethod

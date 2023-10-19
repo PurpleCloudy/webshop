@@ -6,9 +6,9 @@ from . import validators
 class UserProfile(models.Model):
     user = models.OneToOneField(to=User, related_name='profile', on_delete=models.CASCADE)
     name = models.CharField(max_length=40, validators=[validators.name_validator], verbose_name='Имя')
-    surname = models.CharField(max_length=100, validators=[validators.name_validator], verbose_name='Фамилия',  null=True, blank=True)
+    surname = models.CharField(max_length=100, validators=[validators.name_validator], verbose_name='Фамилия')
     age = models.PositiveSmallIntegerField(verbose_name='Возраст')
-    phone_number = models.CharField(max_length=15, verbose_name='Телефон', null=True, blank=True)
+    phone_number = models.CharField(max_length=15, verbose_name='Телефон', null=True)
     email = models.EmailField(verbose_name='Почта')
     avatar = models.ImageField(upload_to='avatars', verbose_name='Фото', null=True, blank=True)
     balance = models.OneToOneField(to="Balance", on_delete=models.CASCADE, related_name='profile', verbose_name='Кошелёк')

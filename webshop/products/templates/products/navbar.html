@@ -1,11 +1,11 @@
 {% load static %}
 
-<link rel="stylesheet" href="{% static 'accounts/css/navbar.css' %}">
+<link rel="stylesheet" href="{% static 'products/css/navbar.css' %}">
 
 
 <nav id="navigation_bar">
         <span id="homepage_link">
-            <a class="menu_links" href="{% url 'accounts:homepage' %}">Webshop</a>
+            <a class="menu_links" href="{% url 'products:homepage' %}">Webshop</a>
         </span>
         <span id="right_menu">
             {% if user.is_authenticated %}

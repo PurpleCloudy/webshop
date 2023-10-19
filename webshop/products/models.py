@@ -6,6 +6,7 @@ class Category(models.Model):
     name = models.CharField(max_length=50, verbose_name='Название')
     slug = models.SlugField(max_length=200, verbose_name='Слаг')
     preview = models.ImageField(upload_to='path_to_static', verbose_name='Превью')
+    parent = models.ForeignKey(to="Category", null=True, blank=True, on_delete=models.CASCADE, verbose_name='Родитель')
 
     class Meta:
         ordering = ['name']

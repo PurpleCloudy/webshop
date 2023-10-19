@@ -1,0 +1,18 @@
+{% extends 'products/base.html' %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'products/css/homepage.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div id="side_bar">
+        {% for category in categories %}
+            <!-- <p><a href=""><img src="{{category.preview.url}}" alt="" srcset=""></a></p> -->
+            <p><a href="">{{category.name}}</a></p>
+        {% endfor %}
+    </div>
+    <div id="catalog">
+
+    </div>
+{% endblock %}

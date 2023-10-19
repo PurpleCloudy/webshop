@@ -9,25 +9,28 @@
 
 {% block content %}
     <div id="updating_block">
+        <div id="avatar_block">
+            <img id="avatar" src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'accounts/img/default_images/default_profile_avatar.jpg'%}{% endif %}" alt="Аватар">
+        </div>
         <form id="updating_form" method="post" action="{% url 'accounts:update_profile' %}">
             {% csrf_token %}
             <div class="input_field">
                 <label class="label_input_field" for="name">Имя</label>
-                <input id="name" class="input_field" type="text" placeholder="Введите имя" name="name">
+                <input id="name" class="input_field" type="text" placeholder="Введите имя" name="name" required>
             </div>
             <div class="input_field">
                 <label class="label_input_field" for="surname">Фамилия</label>
-                <input id="surname" class="input_field" type="text" placeholder="Введите фамилию" name="surname">
-            </div>
-            <div class="input_field">
-                <label class="label_input_field" for="phone">Телефон</label>
-                <input id="phone" class="input_field" type="text" placeholder="Введите номер телефона" name="phone_number">
+                <input id="surname" class="input_field" type="text" placeholder="Введите фамилию" name="surname" required>
             </div>
             <div class="input_field">
                 <label class="label_input_field" for="age">Возраст</label>
-                <input id="age" class="input_field" type="number" min="10" max="100" name="age">
+                <input id="age" class="input_field" type="number" min="10" max="100" name="age" required>
             </div>
-            <button id="submit_registration" type="submit">Подтвердить</button>
+            <div class="input_field">
+                <label class="label_input_field" for="phone">Телефон</label>
+                <input id="phone" class="input_field" type="text" placeholder="Введите номер телефона" name="phone_number" required>
+            </div>
+            <button id="submit_update" type="submit">Подтвердить</button>
         </form>
     </div>
 {% endblock %}
