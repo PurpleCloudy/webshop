@@ -8,6 +8,8 @@ app_name = 'products'
 urlpatterns = [
     path('homepage/', views_templates.Homepage.as_view(), name='homepage'),
 
+    path('category/<slug:slug>', views_templates.Category.as_view(), name='category'),
+
     path('sales/', views_api.SalesAPIView.as_view(), name='sales'),
     path('sale/<int:pk>/', views_api.SaleAPIView.as_view(), name='sale'),
 

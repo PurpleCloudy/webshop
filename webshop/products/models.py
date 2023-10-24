@@ -82,7 +82,9 @@ class Product(models.Model):
     description = models.TextField(verbose_name='Описание')
     short_description = models.CharField(max_length=53, verbose_name='Описание', null=True)
     rating = models.PositiveSmallIntegerField(verbose_name='Рейтинг', null=True, blank=True)
+    preview = models.ImageField(upload_to='path_to_media', default='path_to_static/no_image_available.jpg', verbose_name='Превью')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
+    amount_sold = models.BigIntegerField(verbose_name='Количество купленных товаров', default=0)
     tags = TaggableManager(blank=True, verbose_name='Теги')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Дата добавления')
 
