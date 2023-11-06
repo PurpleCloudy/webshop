@@ -6,11 +6,11 @@
 {% endblock %}
 
 {% block content %}
-    <div id="side_bar">
-        <h5 id="categories_head">Categories</h1>
-        <ul id="main_list">
-            {% for category in categories %}
-                {% if not category.parent %}
+    {% if categories %}
+        <div id="side_bar">
+            <h5 id="categories_head">{% if parent_category %} {{ parent_category.name }} {% else %}Categories{% endif %}</h1>
+            <ul id="main_list">
+                {% for category in categories %}
                     <li>
                         <a class="category_link" href="{% url 'products:category' category.slug %}">
                             <p class="category_name">
@@ -18,37 +18,15 @@
                             </p>
                         </a>
                     </li>
-                    <ul class="category" id="{{ category.name }}">
-                        {% for sub_category in categories %}
-                            {% if sub_category.parent.name == category.name %}
-                                <li class="sub_category" id="{{ sub_category.name }}">
-                                    <a class="category_link" href="{% url 'products:category' sub_category.slug %}">
-                                        <p class="sub_category_name">
-                                            {{ sub_category.name }}
-                                        </p>
-                                    </a>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endfor %}
-        </ul>
-    </div>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
     <div id="catalog">
+
         <div id="sales_table">
             <div class="sales_table_row">
-                {% for sale in current_sales_row1 %}
-                    <div class="sale_obj">
-                        <a class="sale_link" href="{% url 'products:sale' sale.pk %}">
-                        <img class="sale_preview" src="{{ sale.preview.url }}" alt="">
-                        <p class="sale_name">{{ sale.name }}</p>
-                        </a>
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="sales_table_row">
-                {% for sale in current_sales_row2 %}
+                {% for sale in allsales %}
                     <div class="sale_obj">
                         <a class="sale_link" href="{% url 'products:sale' sale.pk %}">
                             <img class="sale_preview" src="{{ sale.preview.url }}" alt="">

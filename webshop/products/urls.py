@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from . import views_api
-from . import views_templates
+from . import views_api, views_templates, system_scripts
 
 app_name = 'products'
 
@@ -9,6 +8,8 @@ urlpatterns = [
     path('homepage/', views_templates.Homepage.as_view(), name='homepage'),
 
     path('category/<slug:slug>', views_templates.Category.as_view(), name='category'),
+
+    path('hits/catalog/', views_templates.Pagination.as_view(), name='catalog'),
 
     path('sales/', views_api.SalesAPIView.as_view(), name='sales'),
     path('sale/<int:pk>/', views_api.SaleAPIView.as_view(), name='sale'),
@@ -21,4 +22,6 @@ urlpatterns = [
 
     path('sellers/', views_api.SellersAPIView.as_view(), name='seller'),
     path('seller/<int:pk>/', views_api.SellerAPIView.as_view(), name='seller'),
+
+    path('script/', system_scripts.adding, name='script'),
 ]

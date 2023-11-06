@@ -24,6 +24,7 @@ class UserProfile(models.Model):
     def __str__(self) -> str:
         return self.name
 
+
 class Balance(models.Model):
     id = models.BigAutoField(primary_key=True, verbose_name='ID')
     value = models.DecimalField(decimal_places=2, max_digits=20, verbose_name='Баланс')
@@ -35,6 +36,7 @@ class Balance(models.Model):
 
     def __str__(self) -> str:
         return f'{self.value}'
+
 
 class Address(models.Model):
     id = models.BigAutoField(primary_key=True, verbose_name='ID')

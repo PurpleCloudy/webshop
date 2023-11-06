@@ -1,8 +1,10 @@
 from django.db import models
 from taggit.managers import TaggableManager
+from accounts.models import UserProfile
 
 
 class Category(models.Model):
+    objects = models.Manager()
     name = models.CharField(max_length=50, verbose_name='Название')
     slug = models.SlugField(max_length=200, verbose_name='Слаг')
     preview = models.ImageField(upload_to='path_to_static', verbose_name='Превью')
@@ -16,7 +18,9 @@ class Category(models.Model):
     def __str__(self) -> str:
         return self.name
 
+
 class Brand(models.Model):
+    objects = models.Manager()
     name = models.CharField(max_length=50, verbose_name='Название')
     slug = models.SlugField(max_length=200, verbose_name='Слаг')
     preview = models.ImageField(upload_to='path_to_media', verbose_name='Превью')
@@ -32,7 +36,9 @@ class Brand(models.Model):
     def __str__(self) -> str:
         return self.name
 
+
 class Seller(models.Model):
+    objects = models.Manager()
     name = models.CharField(max_length=50, verbose_name='Название')
     slug = models.SlugField(max_length=200, verbose_name='Слаг')
     preview = models.ImageField(upload_to='path_to_media', verbose_name='Превью')
@@ -48,7 +54,9 @@ class Seller(models.Model):
     def __str__(self) -> str:
         return self.name
 
+
 class Sale(models.Model):
+    objects = models.Manager()
     name = models.CharField(max_length=150, verbose_name='Название')
     value = models.PositiveSmallIntegerField(verbose_name='Размер скидки')
     preview = models.ImageField(upload_to='path_to_media', verbose_name='Превью')
@@ -72,7 +80,9 @@ class Sale(models.Model):
     def __str__(self) -> str:
         return self.name
 
+
 class Product(models.Model):
+    objects = models.Manager()
     category = models.ForeignKey(to=Category, on_delete=models.CASCADE, verbose_name='Категория')
     brand = models.ForeignKey(to=Brand, on_delete=models.CASCADE, verbose_name='Бренд', null=True, blank=True)
     seller = models.ForeignKey(to=Seller, on_delete=models.CASCADE, verbose_name='Продавец')
@@ -82,6 +92,7 @@ class Product(models.Model):
     description = models.TextField(verbose_name='Описание')
     short_description = models.CharField(max_length=53, verbose_name='Описание', null=True)
     rating = models.PositiveSmallIntegerField(verbose_name='Рейтинг', null=True, blank=True)
+    feedback_number = models.PositiveIntegerField(verbose_name='Количество отзывов', default=0)
     preview = models.ImageField(upload_to='path_to_media', default='path_to_static/no_image_available.jpg', verbose_name='Превью')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
     amount_sold = models.BigIntegerField(verbose_name='Количество купленных товаров', default=0)
@@ -110,15 +121,25 @@ class Product(models.Model):
         self.short_description = self.verbose_description()
         super().save()
 
+
 class Image(models.Model):
+    objects = models.Manager()
     product = models.ForeignKey(to=Product, related_name='images', on_delete=models.CASCADE, verbose_name='Товар')
     image = models.ImageField(upload_to='path_to_media', verbose_name='Путь к изображению')
     description = models.CharField(max_length=200, verbose_name='Описание')
 
     class Meta:
         ordering = ['-product__pk']
-        verbose_name='Изображение'
-        verbose_name_plural='Изображения'
+        verbose_name = 'Изображение'
+        verbose_name_plural = 'Изображения'
 
     def __str__(self) -> str:
         return self.image.url
+
+
+class Feedback(models.Model):
+    author = models.ForeignKey(to=UserProfile, related_name='feedbacks', on_delete=models.PROTECT, verbose_name='Автор')
+    product = models.ForeignKey(to=Product, related_name='feedbacks', on_delete=models.CASCADE, verbose_name='Продукты')
+    paragraph = models.CharField(max_length=100, verbose_name='Заголовок')
+    main_content = models.TextField(verbose_name='Основная часть')
+    rating = models.PositiveSmallIntegerField(verbose_name='Рейтинг')

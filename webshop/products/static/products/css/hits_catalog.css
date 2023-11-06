@@ -1,0 +1,64 @@
+#main_content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: 3rem;
+}
+
+.hit_object {
+    display: flex;
+    flex-direction: column;
+    width: 10rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    margin-left: 1rem;
+}
+
+.hit_img {
+    border-radius: 15px;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.hit_name {
+    margin-bottom: 1rem;
+    display: block;
+    height: 2rem;
+    color:#006946;
+    font-weight: 500;
+}
+
+.hit_rating {
+    margin-bottom: 1rem;
+    display: block;
+    height: 2rem;
+    color:rgb(255, 183, 48);
+    font-weight: 500;
+}
+
+.hit_link {
+    text-decoration: none;
+}
+
+#paginator {
+    display: flex;
+}
+
+.pagination_link {
+    text-decoration: none;
+    color:#006946;
+    font-weight: 500;
+    margin-right: 0.2rem;
+}
+
+.pagination_link_current {
+    text-decoration: none;
+    color:#991602;
+    font-weight: 700;
+    margin-right: 0.2rem;
+}
+
+.pagination_dots {
+    margin-right: 0.2rem;
+}
