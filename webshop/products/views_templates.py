@@ -35,43 +35,41 @@ class Category(View):
 class Pagination(View):
     @staticmethod
     def get(request: HttpRequest):
-        try:
-            page = int(request.GET['page'])
-            page_size = int(request.GET['page_size'])
-        except (ValueError, Exception):
-            page = 1
-            page_size = 35
+        page = int(request.GET.get('page', 1))
+        page_size = int(request.GET.get('page_size', 35))
         start_index = (page-1)*page_size
         end_index = page*page_size
-        print(start_index, end_index)
         hits = models.Product.objects.order_by('-amount_sold')[start_index:end_index]
         pages_number = ceil(len(models.Product.objects.all())/page_size)
-        response_data = []
-        for hit in hits:
-            name = str(hit.name[:30]+'...').replace("'", "")
-            response_data.append(
-                {
-                    'id': hit.pk,
-                    'category': hit.category,
-                    'brand': hit.brand,
-                    'seller': hit.seller,
-                    'sale': hit.sale,
-                    'name': name,
-                    'slug': hit.slug,
-                    'description': hit.description,
-                    'rating': hit.rating,
-                    'price': hit.price,
-                    'preview':hit.preview.url,
-                })
-        return render(request, 'products/hits_catalog.html', {'hits':response_data, 
-                                                              'pages_number':pages_number, 
-                                                              'pages_number_prev1':pages_number-1,
-                                                              'pages_number_prev2':pages_number-2,
-                                                              'pages_number_prew3':pages_number-3,
-                                                              'page':page,
-                                                              'page_prew1':page-1,
-                                                              'page_post1':page+1,
-                                                              })
+        response_data = [
+            {
+                'id': hit.pk,
+                'category': hit.category,
+                'brand': hit.brand,
+                'seller': hit.seller,
+                'sale': hit.sale,
+                'name': str(hit.name[:30] + '...').replace("'", ""),
+                'slug': hit.slug,
+                'description': hit.description,
+                'rating': hit.rating,
+                'price': hit.price,
+                'preview': hit.preview.url,
+            }
+            for hit in hits
+        ]
+        return render(
+            request, 'products/hits_catalog.html',
+            {
+                'hits': response_data,
+                'pages_number': pages_number,
+                'pages_number_prev1': pages_number - 1,
+                'pages_number_prev2': pages_number - 2,
+                'pages_number_prev3': pages_number - 3,
+                'page': page,
+                'page_prev1': page - 1,
+                'page_post1': page + 1,
+             }
+        )
 
         # return JsonResponse(data={'hits': response_data}, status=200)
 

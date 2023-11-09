@@ -43,11 +43,12 @@
 
 #paginator {
     display: flex;
+    align-items: center;
 }
 
 .pagination_link {
     text-decoration: none;
-    color:#006946;
+    color: #006946;
     font-weight: 500;
     margin-right: 0.2rem;
 }
@@ -59,6 +60,15 @@
     margin-right: 0.2rem;
 }
 
+.pagination_button {
+    border: solid black;
+    color: white;
+    background-color: #006946;
+    padding: 0.2rem 0.7rem;
+    margin: 0rem 0.5rem;
+    border-radius: 13px;
+}
+
 .pagination_dots {
-    margin-right: 0.2rem;
+    margin: 1rem 0.5rem;
 }

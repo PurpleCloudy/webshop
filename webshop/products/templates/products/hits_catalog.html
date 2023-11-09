@@ -17,29 +17,29 @@
     {% endfor %}
     <div id="paginator">
         {% if pages_number > 5 %}
-            {% if page <= 3 %}
-                <a class="pagination_link" href="{% url 'products:catalog' %}?page=1&page_size=35">1</a>
-                <a class="pagination_link" href="{% url 'products:catalog' %}?page=2&page_size=35"">2</a>
-                <a class="pagination_link" href="{% url 'products:catalog' %}?page=3&page_size=35"">3</a>
-                <a class="pagination_link" href="{% url 'products:catalog' %}?page=4&page_size=35"">4</a>
-                <p class="pagination_dots">...</p>
-                <a class="pagination_link" href="{% url 'products:catalog' %}?page={{pages_number}}&page_size=35"">{{pages_number}}</a>
-            {% elif page >= pages_number_prev1 %}
-                <a class="pagination_link" href="{% url 'products:catalog' %}?page=1&page_size=35"">1</a>
-                <p class="pagination_dots">...</p>
-                <a class="pagination_link" href="{% url 'products:catalog' %}?page={{pages_number_prev3}}&page_size=35"">{{pages_number_prev3}}</a>
-                <a class="pagination_link" href="{% url 'products:catalog' %}?page={{pages_number_prev2}}&page_size=35"">{{pages_number_prev2}}</a>
-                <a class="pagination_link" href="{% url 'products:catalog' %}?page={{pages_number_prev1}}&page_size=35"">{{pages_number_prev1}}</a>
-                <a class="pagination_link" href="{% url 'products:catalog' %}?page={{pages_number}}&page_size=35"">{{pages_number}}</a>
-            {% else %}
-                <a class="pagination_link" href="{% url 'products:catalog' %}?page=1&page_size=35"">1</a>
-                <p class="pagination_dots">...</p>
-                <a class="pagination_link" href="{% url 'products:catalog' %}?page={{page_prew1}}&page_size=35"">{{page_prew1}}</a>
+                {% if page != 1 %}
+                    <a href="{% url 'products:catalog' %}?page={{page|add:'-1'}}&page_size=35"">
+                        <button class="pagination_button">
+                            Предыдущая
+                        </button>
+                    </a>
+                    <p class="pagination_dots">
+                        ...
+                    </p>
+                    <a class="pagination_link" href="{% url 'products:catalog' %}?page={{page|add:'-1'}}&page_size=35"">{{page|add:'-1'}}</a>
+                {% endif %}
                 <a class="pagination_link_current" href="{% url 'products:catalog' %}?page={{page}}&page_size=35"">{{page}}</a>
-                <a class="pagination_link" href="{% url 'products:catalog' %}?page={{page_post1}}&page_size=35"">{{page_post1}}</a>
-                <p class="pagination_dots">...</p>
-                <a class="pagination_link" href="{% url 'products:catalog' %}?page={{pages_number}}&page_size=35"">{{pages_number}}</a>
-            {% endif %}
+                {% if page != pages_number %}
+                    <a class="pagination_link" href="{% url 'products:catalog' %}?page={{page|add:1}}&page_size=35"">{{page|add:1}}</a>
+                    <p class="pagination_dots">
+                        ...
+                    </p>
+                    <a href="{% url 'products:catalog' %}?page={{page|add:1}}&page_size=35"">
+                        <button class="pagination_button">
+                            Следующая
+                        </button>
+                    </a>
+                {% endif %}
         {% else %}
             {% for page in pages_number %}
                 <a href="{% url 'products:catalog'%}?page={{page}}&page_size=35">{{page}}</a>
