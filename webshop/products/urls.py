@@ -9,13 +9,13 @@ urlpatterns = [
 
     path('category/<slug:slug>', views_templates.Category.as_view(), name='category'),
 
-    path('hits/catalog/', views_templates.Pagination.as_view(), name='catalog'),
+    path('hits/catalog/', views_templates.HitsCatalog.as_view(), name='catalog'),
 
     path('sales/', views_api.SalesAPIView.as_view(), name='sales'),
     path('sale/<int:pk>/', views_api.SaleAPIView.as_view(), name='sale'),
 
     path('products/', views_api.ProductsAPIView.as_view(), name='products'),
-    path('product/<int:pk>/', views_api.ProductAPIView.as_view(), name='product'),
+    path('product/<int:pk>/', views_templates.ProductCardView.as_view(), name='product'),
     
     path('brands/', views_api.BrandsAPIView.as_view(), name='brands'),
     path('brand/<int:pk>/', views_api.BrandAPIView.as_view(), name='brand'),

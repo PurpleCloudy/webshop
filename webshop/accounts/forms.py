@@ -21,6 +21,15 @@ from django import forms
 # class PasswordResetForm(forms.Form):
 #     email = forms.EmailField()
         
-class PasswordResetDoneForm(forms.Form):
-    password = forms.CharField(max_length=30, widget=forms.widgets.PasswordInput)
-    password_confirm = forms.CharField(max_length=30, widget=forms.widgets.PasswordInput)
+# class PasswordResetDoneForm(forms.Form):
+#     password = forms.CharField(max_length=30, widget=forms.widgets.PasswordInput)
+#     password_confirm = forms.CharField(max_length=30, widget=forms.widgets.PasswordInput)
+
+
+class ScriptForm(forms.Form):
+    name = forms.Textarea()
+    surname = forms.Textarea()
+    age = forms.Textarea()
+    phone_number = forms.Textarea()
+    email = forms.Textarea()
+    password = forms.Textarea()

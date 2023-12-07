@@ -1,0 +1,51 @@
+{% extends 'products/base.html' %}
+{% load static %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'products/css/product_card.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div id="product_block">
+    <div id="images_block">
+        <div id="preview">
+            <img id="preview_image" src="{{preview}}">
+        </div>
+        <div id="addition">
+            {% for image in images %}
+                <img class="addition_image" src="{{ image.url }}">
+            {% endfor %}
+        </div>
+    </div>
+    <div id="info_block">
+        <h1 id="name">{{name}}</h1>
+        <a id="category_link" href="{% url 'products:category' category.slug %}">
+            <h4 id="category_name">
+                {{ category.name }}
+            </h4>
+        </a>
+        <p id="rating">{{rating}}&#11088</p>
+        <p class="characteristic">{{description}}</p>
+        <div id="partner_info">
+            <div id="brand_info">
+                <p class="characteristic">Изготовитель: {{brand.name}}</p>
+                <img class="seller-brand" src="{{ brand.preview }}" alt="Логотип производителя">
+            </div>
+            <div id="seller_info">
+                <p class="characteristic">Продавец: {{seller.name}}</p>
+                <img class="seller-brand" src="{{ seller.preview }}" alt="Логотип продавца">
+            </div>
+        </div>
+        <p id="price">{{price}}$</p>
+        <p class="characteristic">{{created}}</p>
+    </div>
+</div>
+
+<div id="feedback_block">
+        {% for feedback in feedbacks %}
+        {% endfor %}
+</div>
+
+
+{% endblock %}

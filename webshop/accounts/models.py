@@ -4,13 +4,14 @@ from . import validators
 
 
 class UserProfile(models.Model):
+    objects = models.Manager()
     user = models.OneToOneField(to=User, related_name='profile', on_delete=models.CASCADE)
     name = models.CharField(max_length=40, validators=[validators.name_validator], verbose_name='Имя')
     surname = models.CharField(max_length=100, validators=[validators.name_validator], verbose_name='Фамилия')
     age = models.PositiveSmallIntegerField(verbose_name='Возраст')
     phone_number = models.CharField(max_length=15, verbose_name='Телефон', null=True)
     email = models.EmailField(verbose_name='Почта')
-    avatar = models.ImageField(upload_to='avatars', verbose_name='Фото', null=True, blank=True)
+    avatar = models.ImageField(upload_to='avatars', default='path_to_static/no_image_available.jpg', verbose_name='Фото', null=True, blank=True)
     balance = models.OneToOneField(to="Balance", on_delete=models.CASCADE, related_name='profile', verbose_name='Кошелёк')
     password = models.CharField(max_length=30, verbose_name='Пароль')
     reset_token = models.CharField(max_length=32, null=True, blank=True)
@@ -39,6 +40,7 @@ class Balance(models.Model):
 
 
 class Address(models.Model):
+    objects = models.Manager()
     id = models.BigAutoField(primary_key=True, verbose_name='ID')
     profile = models.ForeignKey(to="UserProfile", on_delete=models.CASCADE, verbose_name='Аккаунт')
     post_index = models.CharField(max_length=9, verbose_name='Почтовый индекс')

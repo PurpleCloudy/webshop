@@ -12,10 +12,10 @@ class Category(models.Model):
 
     class Meta:
         ordering = ['name']
-        verbose_name='Категория'
-        verbose_name_plural='Категории'
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
 
-    def __str__(self) -> str:
+    def __str__(self) -> models.CharField:
         return self.name
 
 
@@ -23,17 +23,19 @@ class Brand(models.Model):
     objects = models.Manager()
     name = models.CharField(max_length=50, verbose_name='Название')
     slug = models.SlugField(max_length=200, verbose_name='Слаг')
-    preview = models.ImageField(upload_to='path_to_media', verbose_name='Превью')
+    preview = models.ImageField(upload_to='path_to_media',
+                                default='path_to_static/no_image_default.jpg',
+                                verbose_name='Превью')
     description = models.TextField(verbose_name='Описание')
     official_name = models.CharField(max_length=200, verbose_name='Зарегистрированное имя')
     licence = models.BooleanField(default=False, verbose_name='Лицензия')
 
     class Meta:
         ordering = ['name', 'official_name']
-        verbose_name='Бренд'
-        verbose_name_plural='Бренды'
+        verbose_name = 'Бренд'
+        verbose_name_plural = 'Бренды'
 
-    def __str__(self) -> str:
+    def __str__(self) -> models.CharField:
         return self.name
 
 
@@ -41,17 +43,19 @@ class Seller(models.Model):
     objects = models.Manager()
     name = models.CharField(max_length=50, verbose_name='Название')
     slug = models.SlugField(max_length=200, verbose_name='Слаг')
-    preview = models.ImageField(upload_to='path_to_media', verbose_name='Превью')
+    preview = models.ImageField(upload_to='path_to_media',
+                                default='path_to_static/no_image_default.jpg',
+                                verbose_name='Превью')
     description = models.TextField(verbose_name='Описание')
     official_name = models.CharField(max_length=200, verbose_name='Зарегистрированное имя')
     licence = models.BooleanField(default=False, verbose_name='Лицензия')
 
     class Meta:
         ordering = ['name', 'official_name']
-        verbose_name='Продавец'
-        verbose_name_plural='Продавцы'
+        verbose_name = 'Продавец'
+        verbose_name_plural = 'Продавцы'
 
-    def __str__(self) -> str:
+    def __str__(self) -> models.CharField:
         return self.name
 
 
@@ -63,7 +67,11 @@ class Sale(models.Model):
     start_date = models.DateTimeField(verbose_name='Дата добавления')
     end_date = models.DateTimeField(verbose_name='Дата окончания')
 
-    def save(self):
+    def save(self,
+             force_insert: bool = False,
+             force_update: bool = False,
+             using: any = None, update_fields:
+             any = None):
         if self.start_date < self.end_date:
             super().save()
         else:
@@ -74,10 +82,10 @@ class Sale(models.Model):
             models.Index(fields=['id']),
         ]
         ordering = ['-start_date']
-        verbose_name='Скидка'
-        verbose_name_plural='Скидки'
+        verbose_name = 'Скидка'
+        verbose_name_plural = 'Скидки'
 
-    def __str__(self) -> str:
+    def __str__(self) -> models.CharField:
         return self.name
 
 
@@ -91,18 +99,26 @@ class Product(models.Model):
     slug = models.SlugField(max_length=200, verbose_name='Слаг')
     description = models.TextField(verbose_name='Описание')
     short_description = models.CharField(max_length=53, verbose_name='Описание', null=True)
+    short_name = models.CharField(max_length=33, verbose_name='Краткое имя', null=True)
     rating = models.PositiveSmallIntegerField(verbose_name='Рейтинг', null=True, blank=True)
     feedback_number = models.PositiveIntegerField(verbose_name='Количество отзывов', default=0)
-    preview = models.ImageField(upload_to='path_to_media', default='path_to_static/no_image_available.jpg', verbose_name='Превью')
+    preview = models.ImageField(upload_to='path_to_media',
+                                default='path_to_static/no_image_available.jpg',
+                                verbose_name='Превью')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
     amount_sold = models.BigIntegerField(verbose_name='Количество купленных товаров', default=0)
     tags = TaggableManager(blank=True, verbose_name='Теги')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Дата добавления')
 
     def verbose_description(self):
-        if len(self.description) <= 50:
+        if len(str(self.description)) <= 50:
             return self.description
         return f'{self.description[:50]}...'
+    
+    def verbose_name(self):
+        if len(str(self.name)) <= 30:
+            return self.name
+        return f'{self.name[:30]}...'
 
     class Meta:
         indexes = [
@@ -110,14 +126,18 @@ class Product(models.Model):
         ]
         default_related_name = 'products'
         ordering = ['-created']
-        verbose_name='Продукт'
-        verbose_name_plural='Продукты'
+        verbose_name = 'Продукт'
+        verbose_name_plural = 'Продукты'
 
-    def __str__(self) -> str:
+    def __str__(self) -> models.CharField:
         return self.name
     
-    def save(self):
-        super().save()
+    def save(self,
+             force_insert: bool = False,
+             force_update: bool = False,
+             using: any = None, update_fields:
+             any = None):
+        self.short_name = self.verbose_name()
         self.short_description = self.verbose_description()
         super().save()
 
@@ -138,6 +158,7 @@ class Image(models.Model):
 
 
 class Feedback(models.Model):
+    objects = models.Manager()
     author = models.ForeignKey(to=UserProfile, related_name='feedbacks', on_delete=models.PROTECT, verbose_name='Автор')
     product = models.ForeignKey(to=Product, related_name='feedbacks', on_delete=models.CASCADE, verbose_name='Продукты')
     paragraph = models.CharField(max_length=100, verbose_name='Заголовок')

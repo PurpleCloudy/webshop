@@ -1,8 +1,7 @@
-from math import ceil
 from django.views import View
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpRequest, HttpResponse, JsonResponse
-from . import models
+from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.http import HttpRequest, HttpResponse
+from . import models, serializers, paginators
 
 
 class Homepage(View):
@@ -10,11 +9,15 @@ class Homepage(View):
     def get(request: HttpRequest) -> HttpResponse:
         all_sales = models.Sale.objects.order_by('-end_date').all()[:6]
         hits = models.Product.objects.order_by('-amount_sold').all()[:300]
+        hits_data = paginators.products_pagination(request=request, pagination_data=hits, default_size=6)
+        products = models.Product.objects.order_by('-amount_sold')[hits_data['start_index']:hits_data['end_index']]
+        response_data = serializers.serialize_product_pagination(products)
         return render(request, 'products/homepage.html', {
-                                                                    'categories': models.Category.objects.all(),
-                                                                    'allsales': all_sales,
-                                                                    'hits': hits
-                                                                        })
+            'categories': models.Category.objects.all(),
+            'allsales': all_sales,
+            'hits': response_data,
+            'page': hits_data['page'],
+        })
 
 
 class Category(View):
@@ -23,57 +26,54 @@ class Category(View):
         category = get_object_or_404(models.Category, slug=slug)
         subcategories = models.Category.objects.filter(parent=category)
         all_sales = models.Sale.objects.order_by('-end_date').all()[:6]
-        hits = models.Product.objects.order_by('-amount_sold').filter(category=category)[:30]
+        hits = models.Product.objects.order_by('-amount_sold').filter(category=category)
+        hits_data = paginators.products_pagination(request=request, pagination_data=hits, default_size=6)
+        products = models.Product.objects.order_by('-amount_sold')[hits_data['start_index']:hits_data['end_index']]
+        response_data = serializers.serialize_product_pagination(products)
         return render(request, 'products/homepage.html', {
-                                                                                'parent_category': category,
-                                                                                'categories': subcategories,
-                                                                                'allsales': all_sales,
-                                                                                'hits': hits
-                                                                                    })
+            'parent_category': category,
+            'categories': subcategories,
+            'allsales': all_sales,
+            'hits': response_data,
+            'page': hits_data['page'],
+        })
 
 
-class Pagination(View):
+class HitsCatalog(View):
     @staticmethod
     def get(request: HttpRequest):
-        page = int(request.GET.get('page', 1))
-        page_size = int(request.GET.get('page_size', 35))
-        start_index = (page-1)*page_size
-        end_index = page*page_size
-        hits = models.Product.objects.order_by('-amount_sold')[start_index:end_index]
-        pages_number = ceil(len(models.Product.objects.all())/page_size)
-        response_data = [
-            {
-                'id': hit.pk,
-                'category': hit.category,
-                'brand': hit.brand,
-                'seller': hit.seller,
-                'sale': hit.sale,
-                'name': str(hit.name[:30] + '...').replace("'", ""),
-                'slug': hit.slug,
-                'description': hit.description,
-                'rating': hit.rating,
-                'price': hit.price,
-                'preview': hit.preview.url,
-            }
-            for hit in hits
-        ]
+        hits_data = paginators.products_pagination(request=request, pagination_data=models.Product.objects.all(), default_size=35)
+        products = (models.Product.objects.order_by('-amount_sold')[hits_data['start_index']:hits_data['end_index']])
+        response_data = serializers.serialize_product_pagination(products)
         return render(
             request, 'products/hits_catalog.html',
             {
                 'hits': response_data,
-                'pages_number': pages_number,
-                'pages_number_prev1': pages_number - 1,
-                'pages_number_prev2': pages_number - 2,
-                'pages_number_prev3': pages_number - 3,
-                'page': page,
-                'page_prev1': page - 1,
-                'page_post1': page + 1,
-             }
+                'pages_number': hits_data['pages_number'],
+                'page': hits_data['page'],
+            }
         )
 
         # return JsonResponse(data={'hits': response_data}, status=200)
 
+
+class ProductCardView(View):
     @staticmethod
-    def post(request: HttpRequest):
-        print(request.POST)
-        return HttpResponse(status=200)
+    def get(request: HttpRequest, pk: int) -> HttpResponse:
+        product = models.Product.objects.get(id=pk)
+        return render(request, 'products/product_card.html', serializers.serialize_product_obj(product))
+
+    @staticmethod
+    def post(request: HttpRequest, pk: int) -> HttpResponse:
+        user = request.user
+        if user.is_authenticated():
+            product = models.Product.objects.get(id=pk)
+            models.Feedback.objects.create(
+                author=user.profile,
+                product=product,
+                paragraph=request.POST['paragraph'],
+                main_content=request.POST['main_content'],
+                rating=request.POST['rating'],
+            )
+            return render(request, 'products/product_card.html', serializers.serialize_product_obj(product))
+        return redirect(reverse('login'))

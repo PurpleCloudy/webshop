@@ -96,8 +96,11 @@
 }
 
 .product_img {
-    width: 100%;
+    width: 11rem;
+    height: 11rem;
     border-radius: 15px;
+    object-fit: cover;
+    margin-bottom: 1rem;
 }
 
 .product_link {
@@ -107,4 +110,36 @@
 .product_name {
     text-align: center;
     color:rgb(7, 154, 110);
+}
+
+
+#paginator {
+    display: flex;
+    align-items: center;
+}
+
+.pagination_link {
+    text-decoration: none;
+    color: #006946;
+    font-weight: 500;
+    margin-right: 0.2rem;
+}
+
+.pagination_link_current {
+    text-decoration: none;
+    color:#991602;
+    font-weight: 700;
+    margin-right: 0.2rem;
+}
+
+.pagination_button {
+    color: white;
+    background-color: #006946;
+    padding: 0.2rem 0.7rem;
+    margin: 0rem 0.5rem;
+    border-radius: 13px;
+}
+
+.pagination_dots {
+    margin: 1rem 0.5rem;
 }

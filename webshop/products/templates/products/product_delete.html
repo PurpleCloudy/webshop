@@ -1,0 +1,16 @@
+{% load static %}
+{% extends 'products/base.html' %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'products/css/delete_page.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div id="message">
+    <p id="message_text">
+        Продукт успешно удалён
+    </p>
+</div>
+
+{% endblock %}
