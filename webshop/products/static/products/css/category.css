@@ -1,0 +1,145 @@
+#main_content {
+    display: flex;
+    align-items: flex-start;
+    background-color: #e5e5e5;
+    border-radius: 15px;
+}
+
+#side_bar {
+    width: 15%;
+    margin-top: 2rem;
+    padding: 1rem;
+    border: solid #535353;
+    border-radius: 0 15px 15px 0;
+    background-color: #ededed;
+}
+
+#catalog {
+    width: 85%;
+    margin: auto;
+}
+
+#categories_head {
+    padding: 1rem;
+    text-decoration: 0;
+    font-weight: 600;
+    color: #535353;
+}
+
+.category_name {
+    text-decoration: 0;
+    font-weight: 600;
+    color: #026809;
+}
+
+.sub_category_name {
+    text-decoration: 0;
+    font-weight: 400;
+    color: #4d8351;
+    font-style: italic;
+}
+
+.category_link {
+    text-decoration: 0;
+}
+
+#sales_table {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.sales_table_row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.sale_preview {
+    width: 100%;
+    border-radius: 15px;
+    margin-bottom: 0.5rem;
+}
+
+.sale_obj {
+    width: 30%;
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.sale_link{
+    text-decoration: none;
+}
+
+.sale_name {
+    transform: translateX(-50%);
+    left: 50%;
+    bottom: 0;
+    color: rgb(7, 154, 110);
+    text-align: center;
+    font-weight: 500;
+    font-size: x-large;
+    position: absolute;
+}
+
+#hits_table {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding-left: 2rem;
+}
+
+.product_card {
+    margin-right: 1.2rem;
+    width: 15%;
+}
+
+.product_img {
+    width: 11rem;
+    height: 11rem;
+    border-radius: 15px;
+    object-fit: cover;
+    margin-bottom: 1rem;
+}
+
+.product_link {
+    text-decoration: none;
+}
+
+.product_name {
+    text-align: center;
+    color:rgb(7, 154, 110);
+}
+
+
+#paginator {
+    display: flex;
+    align-items: center;
+}
+
+.pagination_link {
+    text-decoration: none;
+    color: #006946;
+    font-weight: 500;
+    margin-right: 0.2rem;
+}
+
+.pagination_link_current {
+    text-decoration: none;
+    color:#991602;
+    font-weight: 700;
+    margin-right: 0.2rem;
+}
+
+.pagination_button {
+    color: white;
+    background-color: #006946;
+    padding: 0.2rem 0.7rem;
+    margin: 0rem 0.5rem;
+    border-radius: 13px;
+}
+
+.pagination_dots {
+    margin: 1rem 0.5rem;
+}

@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block styles %}
-    <link rel="stylesheet" href="{% static 'products/css/homepage.css' %}">
+    <link rel="stylesheet" href="{% static 'products/css/category.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -48,7 +48,7 @@
             {% endfor %}
             <div id="paginator">
                 {% if page != 1 %}
-                    <a href="{% url 'products:homepage' %}?page={{page|add:'-1'}}&page_size=12">
+                    <a href="{% url 'products:category' parent_category.slug %}?page={{page|add:'-1'}}&page_size=12">
                         <button class="pagination_button">
                             Предыдущая
                         </button>
@@ -58,17 +58,17 @@
                             ...
                         </p>
                     {% endif %}
-                    <a class="pagination_link" href="{% url 'products:homepage' %}?page={{page|add:'-1'}}&page_size=12">{{page|add:'-1'}}</a>
+                    <a class="pagination_link" href="{% url 'products:category' parent_category.slug %}?page={{page|add:'-1'}}&page_size=12">{{page|add:'-1'}}</a>
                 {% endif %}
-                <a class="pagination_link_current" href="{% url 'products:homepage' %}?page={{page}}&page_size=12">{{page}}</a>
+                <a class="pagination_link_current" href="{% url 'products:category' parent_category.slug %}?page={{page}}&page_size=12">{{page}}</a>
                 {% if page != pages_number %}
-                    <a class="pagination_link" href="{% url 'products:homepage' %}?page={{page|add:1}}&page_size=12">{{page|add:1}}</a>
+                    <a class="pagination_link" href="{% url 'products:category' parent_category.slug %}?page={{page|add:1}}&page_size=12">{{page|add:1}}</a>
                     {% if page != pages_number|add:'-1' %}
                         <p class="pagination_dots">
                             ...
                         </p>
                     {% endif %}
-                    <a href="{% url 'products:homepage' %}?page={{page|add:1}}&page_size=12">
+                    <a href="{% url 'products:category' parent_category.slug %}?page={{page|add:1}}&page_size=12">
                         <button class="pagination_button">
                             Следующая
                         </button>

@@ -17,6 +17,7 @@ class Homepage(View):
             'allsales': all_sales,
             'hits': response_data,
             'page': hits_data['page'],
+            'pages_number': hits_data['pages_number'],
         })
 
 
@@ -30,12 +31,13 @@ class Category(View):
         hits_data = paginators.products_pagination(request=request, pagination_data=hits, default_size=6)
         products = models.Product.objects.order_by('-amount_sold')[hits_data['start_index']:hits_data['end_index']]
         response_data = serializers.serialize_product_pagination(products)
-        return render(request, 'products/homepage.html', {
+        return render(request, 'products/category_products.html', {
             'parent_category': category,
             'categories': subcategories,
             'allsales': all_sales,
             'hits': response_data,
             'page': hits_data['page'],
+            'pages_number': hits_data['pages_number'],
         })
 
 
